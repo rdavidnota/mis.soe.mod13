@@ -280,3 +280,63 @@ func changeLowConfiguration() {
 	saveConfiguration(configuration)
 	//  saveWords(configuration.Words, configuration.ID)
 }
+
+func GetCountPasswordHistory(user string) int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := 0
+
+	if dbConfiguration.PasswordHistory {
+		resultado = dbConfiguration.PasswordHistoryNumber
+	}
+
+	return resultado
+}
+
+func GetUpdatePassword(usuario string) bool {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := dbConfiguration.ChanguePassNewUser
+
+	return resultado
+}
+
+func GetDaysPassword() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := dbConfiguration.MaximumDaysChanguePassword
+
+	return resultado
+}
+
+func GetCountFailedLogin() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := dbConfiguration.MaximumFailedLogin
+
+	return resultado
+}
