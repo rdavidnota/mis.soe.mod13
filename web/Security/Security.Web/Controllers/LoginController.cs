@@ -85,7 +85,8 @@ namespace Security.Web.Controllers
                     if (isOk)
                     {
                         var claims = new List<Claim>{
-                            new Claim(ClaimTypes.Name, "raul", ClaimValueTypes.String, "https://soe.mis.mod13.com")
+                            new Claim(ClaimTypes.Name, "raul", ClaimValueTypes.String, "https://soe.mis.mod13.com"),
+                            new Claim("UserName","Raul David Nota Mercado")
                         };
 
                         var userIdentity = new ClaimsIdentity(claims, "SecureLogin");

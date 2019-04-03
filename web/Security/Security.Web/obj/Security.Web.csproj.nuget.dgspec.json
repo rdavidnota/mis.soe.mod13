@@ -1,29 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Workspace\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj": {}
+    "D:\\Workspaces\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj": {}
   },
   "projects": {
-    "D:\\Workspace\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj": {
+    "D:\\Workspaces\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Workspace\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj",
+        "projectUniqueName": "D:\\Workspaces\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj",
         "projectName": "Security.Web",
-        "projectPath": "D:\\Workspace\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj",
+        "projectPath": "D:\\Workspaces\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\Security.Web.csproj",
         "packagesPath": "C:\\Users\\rnota\\.nuget\\packages\\",
-        "outputPath": "D:\\Workspace\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\obj\\",
+        "outputPath": "D:\\Workspaces\\go\\src\\github.com\\rdavidnota\\mis.soe.mod13\\web\\Security\\Security.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
           "C:\\Users\\rnota\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 18.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.2"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\DevExpress 18.1\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
