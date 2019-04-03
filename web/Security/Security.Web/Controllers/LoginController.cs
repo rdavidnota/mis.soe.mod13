@@ -25,7 +25,8 @@ namespace Security.Web.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, "raul", ClaimValueTypes.String, "https://soe.mis.mod13.com")
+                    new Claim(ClaimTypes.Name, "raul", ClaimValueTypes.String, "https://soe.mis.mod13.com"),
+                    new Claim("UserName","Raul Nota")
                 };
 
                 var userIdentity = new ClaimsIdentity(claims, "SecureLogin");
@@ -42,7 +43,14 @@ namespace Security.Web.Controllers
                 return GoToReturnUrl(returnUrl);
             }
 
-            return RedirectToAction("Index","Login");
+            return RedirectToAction("Index", "Login");
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         [AllowAnonymous]
@@ -54,5 +62,7 @@ namespace Security.Web.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+
     }
 }
