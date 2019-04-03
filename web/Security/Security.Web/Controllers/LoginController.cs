@@ -112,6 +112,13 @@ namespace Security.Web.Controllers
         }
 
         [AllowAnonymous]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
         private IActionResult GoToReturnUrl(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -120,5 +127,7 @@ namespace Security.Web.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+
     }
 }
