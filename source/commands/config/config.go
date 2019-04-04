@@ -480,3 +480,42 @@ func GetPolicyLogin() int {
 
 	return resultado
 }
+
+func SaveCustomConfiguration(min_digits int, min_letters int, min_capitals int, min_special int, longitud int, max_days int) {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	dbConfiguration.Digits = min_digits != 0
+	dbConfiguration.MinimumDigits = min_digits
+
+	dbConfiguration.Letters = min_letters != 0
+	dbConfiguration.MinimumLetters = min_letters
+
+	dbConfiguration.CapitalLetter = min_capitals != 0
+	dbConfiguration.MinimumCapitalLetters = min_capitals
+
+	dbConfiguration.SpecialCharacters = min_special != 0
+	dbConfiguration.MinimumSpecialCharacter = min_special
+
+	dbConfiguration.MinimunLength = longitud
+	dbConfiguration.MaximumDaysChanguePassword = max_days
+
+	saveConfiguration(dbConfiguration)
+}
+
+func GetConfiguration() config.PassCompose {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	return dbConfiguration
+}

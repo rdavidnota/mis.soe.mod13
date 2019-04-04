@@ -59,3 +59,8 @@ D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.We
 D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Security.Web.dll
 D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Security.Web.pdb
 D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Security.Web.csproj.CopyComplete
+D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Razor\Views\Login\RescuePassword.g.cshtml.cs
+D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Razor\Views\Users\Index.g.cshtml.cs
+D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Razor\Views\Users\Create.g.cshtml.cs
+D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Razor\Views\Login\UpdatePassword.g.cshtml.cs
+D:\Workspace\go\src\github.com\rdavidnota\mis.soe.mod13\web\Security\Security.Web\obj\Debug\netcoreapp2.2\Razor\Views\Parametros\Index.g.cshtml.cs

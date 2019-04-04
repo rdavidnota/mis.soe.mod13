@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Newtonsoft.Json
+@using Security.Web.Models
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -34,13 +37,34 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @{
+                            var usuario = new Usuario() { RolUser = Usuario.Types.Normal };
+
+                            if (User.Claims.Count() > 0)
+                            {
+
+                                var json_usuario = User.Claims.FirstOrDefault(f => f.Type == "Usuario").Value;
+                                usuario = JsonConvert.DeserializeObject<Usuario>(json_usuario);
+                            }
+                        }
+
+                        @if (usuario.RolUser == Usuario.Types.Administrador)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Parametros" asp-action="Index">Parametros</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                            </li>
+                        }
                     </ul>
                     @if (User.Claims.Count() > 0)
                     {
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <span class="navbar-text">
-                                    Bienvenido: @User.Claims.FirstOrDefault(f => f.Type == "UserName").Value
+                                    Bienvenido: @User.Claims.FirstOrDefault(f => f.Type == "Username").Value
                                 </span>
                             </li>
                         </ul>
@@ -51,6 +75,8 @@
                             </li>
                         </ul>
                     }
+
+
                 </div>
             </div>
         </nav>

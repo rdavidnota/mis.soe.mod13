@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/rdavidnota/mis.soe.mod13/source/commands/config"
@@ -35,7 +36,13 @@ func SaveUser(fullname string, email string, document string, usuario string, ty
 	dbUser.Document = document
 	dbUser.IsBlocked = false
 	dbUser.CountBlocked = 0
-	dbUser.Password = utils.RandStringBytes(8)
+
+	new_password := utils.RandStringBytes(8)
+	fmt.Println(new_password)
+
+	password_encrypt, _ := utils.Encrypt(new_password)
+	dbUser.Password = password_encrypt
+
 	dbUser.DateUpdatePassword = time.Now()
 	dbUser.UpdatePassword = config.GetUpdatePassword()
 	dbUser.User = usuario
@@ -283,7 +290,7 @@ func IsVigentePassword(usuario string) bool {
 		t2 := time.Now()
 		days := int(t2.Sub(t1).Hours() / 24)
 
-		resultado = days >= config.GetDaysPassword()
+		resultado = days <= config.GetDaysPassword()
 	}
 
 	return resultado
@@ -305,7 +312,7 @@ func GetDocumentUser(usuario string) string {
 	return resultado
 }
 
-func GetTypeUser(usuario string)int{
+func GetTypeUser(usuario string) int {
 	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
 	defer db.Close()
 
@@ -319,4 +326,50 @@ func GetTypeUser(usuario string)int{
 	}
 
 	return resultado
+}
+
+func GetUser(usuario string) user.User {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbUser = user.User{}
+
+	resultado := user.User{}
+	if err := db.Where("user = ?", usuario).First(&dbUser).Error; err == nil {
+		resultado = dbUser
+	}
+
+	return resultado
+}
+
+func IsValidMail(usuario string, email string) bool {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbUser = user.User{}
+
+	resultado := false
+	if err := db.Where("user = ?", usuario).First(&dbUser).Error; err == nil {
+		resultado = resultado || email == dbUser.Email
+	}
+
+	return resultado
+}
+
+func SetBlocked(usuario string) {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbUser = user.User{}
+
+	if err := db.Where("user = ?", usuario).First(&dbUser).Error; err == nil {
+		dbUser.IsBlocked = true
+		db.Save(dbUser)
+	}
 }

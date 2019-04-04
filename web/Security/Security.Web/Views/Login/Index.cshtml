@@ -3,17 +3,24 @@
     ViewData["Title"] = "Login";
 }
 
-
-
-<div class="offset-3 col-6">
-    <h2>Hmm, looks like you need to log in</h2>
+<div class="offset-3 col-12">
+    <h2>Hmmm, looks like you need to log in</h2>
 
     <form asp-controller="login" asp-action="login" method="post">
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" class="form-control" />
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" class="form-control" />
+        <div class="col-6">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" class="form-control" />
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" class="form-control" />
+        </div>
         <br />
-        <button type="submit" class="btn btn-primary">Log me in</button>
+        <div class="col-6">
+            <button type="submit" class="btn btn-outline-primary col-12">Log me in</button>
+            <hr />
+        </div>
+        
+        <div class="col-6">
+            <a class="btn btn-outline-warning col-12" asp-action="RescuePassword" asp-controller="Login">Recuperar contraseña</a>
+        </div>
     </form>
 </div>

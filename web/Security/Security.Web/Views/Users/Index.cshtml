@@ -1,0 +1,51 @@
+﻿@model List<Security.Web.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+
+
+<div class="row">
+    <div class="col-10">
+        <h2>Usuarios</h2>
+    </div>
+    <div class="col-2">
+        <a class="float-right btn btn-outline-primary" asp-controller="Users" asp-action="Create">Crear Usuario</a>
+    </div>
+</div>
+
+<hr />
+
+@if (Model != null && Model.Count > 0)
+{
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr class="text-center">
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Documento</th>
+                <th>Rol</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Fullname</td>
+                    <td>@user.Email</td>
+                    <td>@user.Document</td>
+                    <td>@user.RolUser.ToString()</td>
+                    <td>
+                        <a class="@string.Format("{0}",user.IsBlocked ?"text-success":"text-danger")" asp-action="BlockUser" asp-controller="Users" asp-route-usuario="@user.User">
+                            @string.Format("{0}", user.IsBlocked ? "Activate" : "Deactivate")
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}

@@ -101,7 +101,7 @@ func Migrate() {
 	password_rnota, _ := Encrypt("mercado.nota")
 	password_jnota, _ := Encrypt("jazmin.nota")
 
-	var rnota = user.User{FullName: "Raul Nota", Document: "6391159", Email: "rdavid.nota@gmail.com", DateUpdatePassword: time.Now(), Password: password_rnota, TypeUser: user.Administrador, User: "rnota", IsBlocked: false}
+	var rnota = user.User{FullName: "Raul Nota", Document: "6391159", Email: "rdavid.nota@gmail.com", DateUpdatePassword: time.Now(), Password: password_rnota, TypeUser: user.Administrador, User: "rnota", IsBlocked: false, UpdatePassword:false}
 	var jnota = user.User{FullName: "Jazmin Nota", Document: "7665894", Email: "jazmin.nota@gmail.com", DateUpdatePassword: time.Now(), Password: password_jnota, TypeUser: user.Normal, User: "jnota", IsBlocked: false}
 
 	db.Create(&rnota)
@@ -123,7 +123,7 @@ func CountDigits(texto string) int {
 	digits := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 	resultado := 0
 	for _, digit := range digits {
-		resultado = strings.Count(texto, digit)
+		resultado += strings.Count(texto, digit)
 	}
 
 	return resultado
@@ -133,7 +133,7 @@ func CountLetter(texto string) int {
 	letters := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
 	resultado := 0
 	for _, letter := range letters {
-		resultado = strings.Count(texto, letter)
+		resultado += strings.Count(texto, letter)
 	}
 
 	return resultado
@@ -143,7 +143,7 @@ func CountCapitalLetter(texto string) int {
 	capitalLetters := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 	resultado := 0
 	for _, capitalLetter := range capitalLetters {
-		resultado = strings.Count(texto, capitalLetter)
+		resultado += strings.Count(texto, capitalLetter)
 	}
 
 	return resultado
@@ -153,7 +153,7 @@ func CountSpecialCharacter(texto string) int {
 	symbols := []string{"$", "#", "&", "@", ".", "-", "_", "*"}
 	resultado := 0
 	for _, symbol := range symbols {
-		resultado = strings.Count(texto, symbol)
+		resultado += strings.Count(texto, symbol)
 	}
 
 	return resultado
@@ -164,9 +164,9 @@ func CountDiferents(compare string, texto string) int {
 
 	if strings.Contains(texto, compare) {
 		if len(texto) > len(compare) {
-			resultado = len(texto) - len(compare)
+			resultado += len(texto) - len(compare)
 		} else {
-			resultado = len(compare) - len(texto)
+			resultado += len(compare) - len(texto)
 		}
 	} else {
 		resultado = math.MaxInt32

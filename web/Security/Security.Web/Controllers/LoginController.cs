@@ -15,7 +15,7 @@ using Security.Web.Models;
 
 namespace Security.Web.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : BaseController
     {
         [AllowAnonymous]
         public IActionResult Index()
@@ -23,70 +23,63 @@ namespace Security.Web.Controllers
             return View();
         }
 
-        [NonAction]
-        public HttpClient Initial()
-        {
-            var Client = new HttpClient
-            {
-                BaseAddress = new Uri(Utils.Url_Service)
-            };
-            Client.DefaultRequestHeaders.Accept.Clear();
-            Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            return Client;
-        }
-
-        [NonAction]
-        public void Api_authentication(HttpClient client)
-        {
-            var byteArray = Encoding.ASCII.GetBytes(Utils.AuthUser + ":" + Utils.AuthPass);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-        }
-
-
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string returnUrl, string username, string password)
         {
             try
             {
-
-                HttpClient client = this.Initial();
-                this.Api_authentication(client);
-
                 Dictionary<string, string> dict = new Dictionary<string, string>
                 {
                     { "usuario", username },
                     { "password", password },
                 };
 
-                StringBuilder builder = new StringBuilder();
+                var resultado = this.ConsumeService(dict, "user_validate", HttpMethod.Get);
 
-                foreach (KeyValuePair<string, string> pair in dict)
+                if (resultado.Response.IsSuccessStatusCode)
                 {
-                    builder.Append(pair.Key).Append("=").Append(pair.Value).Append('&');
-                }
-
-                string queryString = builder.ToString();
-                // Remove the final delimiter
-                queryString = queryString.TrimEnd('&');
-
-                HttpRequestMessage requestMessage = new HttpRequestMessage
-                {
-                    RequestUri = new Uri(client.BaseAddress + "user_validate?" + queryString),
-                    Method = HttpMethod.Get
-                };
-
-                HttpResponseMessage response = client.SendAsync(requestMessage).Result;
-                var result = response.Content.ReadAsStringAsync().Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    bool isOk = JsonConvert.DeserializeObject<bool>(result);
+                    bool isOk = JsonConvert.DeserializeObject<bool>(resultado.Result);
 
                     if (isOk)
                     {
+                        Dictionary<string, string> dict_update = new Dictionary<string, string>{
+                                { "usuario", username },
+                            };
+
+                        var update_password = this.ConsumeService(dict_update, "update_password", HttpMethod.Get);
+                        var vigente_password = this.ConsumeService(dict_update, "vigente_password", HttpMethod.Get);
+
+                        bool isUpdate = false, isVigente = false;
+
+                        if (update_password.Response.IsSuccessStatusCode)
+                        {
+                            isUpdate = JsonConvert.DeserializeObject<bool>(update_password.Result);
+                        }
+
+                        if (vigente_password.Response.IsSuccessStatusCode)
+                        {
+                            isVigente = JsonConvert.DeserializeObject<bool>(vigente_password.Result);
+                        }
+
+                        if (isUpdate)
+                        {
+                            return RedirectToAction("UpdatePassword", "Login", new { usuario = username, why = 1 });
+                        }
+
+                        if (!isVigente)
+                        {
+                            return RedirectToAction("UpdatePassword", "Login", new { usuario = username, why = 2 });
+                        }
+
+                        var usuario = this.getUser(username);
                         var claims = new List<Claim>{
-                            new Claim(ClaimTypes.Name, "raul", ClaimValueTypes.String, "https://soe.mis.mod13.com"),
-                            new Claim("UserName","Raul David Nota Mercado")
+                           // new Claim(ClaimTypes.Name, "Correo", ClaimTypes.Email, usuario.Email),
+                            new Claim("Username",usuario.Fullname),
+                            new Claim("Email",usuario.Email),
+                            new Claim("Document",usuario.Document),
+                            new Claim("Login",usuario.User),
+                            new Claim("TypeUser",Convert.ToString(usuario.TypeUser)),
+                            new Claim("Usuario",JsonConvert.SerializeObject(usuario)),
                         };
 
                         var userIdentity = new ClaimsIdentity(claims, "SecureLogin");
@@ -112,6 +105,26 @@ namespace Security.Web.Controllers
             return RedirectToAction("Index", "Login");
         }
 
+        [NonAction]
+        public Models.Usuario getUser(string username)
+        {
+            var usuario = new Models.Usuario();
+
+            Dictionary<string, string> dict = new Dictionary<string, string>(){
+                { "usuario", username }
+            };
+
+            var resultado = this.ConsumeService(dict, "user", HttpMethod.Get);
+
+
+            if (resultado.Response.IsSuccessStatusCode)
+            {
+                usuario = JsonConvert.DeserializeObject<Models.Usuario>(resultado.Result);
+            }
+
+            return usuario;
+        }
+
         [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
@@ -127,6 +140,65 @@ namespace Security.Web.Controllers
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public IActionResult RescuePassword()
+        {
+            return View();
+        }
+
+        public IActionResult UpdatePassword(string usuario, int why, List<int> codigos = null)
+        {
+            ViewBag.usuario = usuario;
+            ViewBag.why = why;
+            ViewBag.codigos = codigos;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UpdatePass(string usuario, string document, string current_password, string new_password, string validate_password)
+        {
+
+            if (new_password.Equals(validate_password))
+            {
+                Dictionary<string, string> dict = new Dictionary<string, string>{
+                    { "usuario", usuario},
+                    { "new_password", new_password},
+                    { "password", current_password},
+                    { "document", document},
+                };
+
+                var resultado = this.ConsumeService(dict, "change_password", HttpMethod.Post);
+
+                if (resultado.Response.IsSuccessStatusCode)
+                {
+                    var codigos = JsonConvert.DeserializeObject<List<int>>(resultado.Result);
+
+                    if (codigos != null && codigos.Count > 0 && !codigos.Any(a => a == 0))
+                    {
+                        return RedirectToAction("UpdatePassword", "Login", new { usuario = usuario, codigos = codigos });
+                    }
+                }
+
+            }
+
+            return RedirectToAction("Index", "Login");
+        }
+
+        [AllowAnonymous, HttpPost]
+        public IActionResult Recover(string username, string email)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>{
+                    { "email", email},
+                    { "usuario", username},
+                };
+
+            this.ConsumeService(dict, "rescue_password", HttpMethod.Post);
+
+            ViewBag.recover = true;
+            return View("RescuePassword");
         }
 
 

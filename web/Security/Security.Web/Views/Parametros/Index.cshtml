@@ -1,0 +1,49 @@
+﻿@model Security.Web.Models.Configuration
+
+@{
+    ViewData["Title"] = "Parametros";
+}
+
+<div class="row">
+    <div class="offset-3 col-6">
+        <h2>Parametros Generales</h2>
+        <hr />
+
+        <form asp-controller="Parametros" asp-action="Change" method="post">
+            <div class="row">
+                <label for="level">Nivel</label>
+                <select name="level" class="form-control">
+                    <option value="300">Alta</option>
+                    <option value="200">Media</option>
+                    <option value="100">Baja</option>
+                    <option value="0">Custom</option>
+                </select>
+
+                <label for="min_digits">Numero Digitos</label>
+                <input class="form-control" name="min_digits" value="@Model.MinimumDigits" />
+
+                <label for="min_letters">Numero letras</label>
+                <input class="form-control" name="min_letters" value="@Model.MinimumLetters" />
+
+                <label for="min_capitals">Numero Mayusculas</label>
+                <input class="form-control" name="min_capitals" value="@Model.MinimumCapitalLetters" />
+
+                <label for="min_special">Numero Mayusculas</label>
+                <input class="form-control" name="min_special" value="@Model.MinimumSpecialCharacter" />
+
+                <label for="longitud">Longitud minima de contraseña</label>
+                <input class="form-control" name="longitud" value="@Model.MinimunLength" />
+
+                <label for="max_days">Dias Maximos para cambiar la contraseña</label>
+                <input class="form-control" name="max_days" value="@Model.MaximumDaysChanguePassword" />
+            </div>
+            <br />
+            <div class="row">
+                <button type="submit" class="btn btn-outline-primary col-12">Save</button>
+            </div>
+
+
+        </form>
+
+    </div>
+</div>

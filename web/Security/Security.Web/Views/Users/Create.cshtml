@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2>Create User</h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <form asp-controller="Users" asp-action="CreateUser" method="post">
+            <div class="col-6">
+                <label for="fullname">Nombre</label>
+                <input id="fullname" name="fullname" type="text" class="form-control" />
+                <label for="document">Documento</label>
+                <input id="document" name="document" type="text" class="form-control" />
+                <label for="email">Email</label>
+                <input id="email" name="email" type="text" class="form-control" />
+                <label for="usuario">Usuario</label>
+                <input id="usuario" name="usuario" type="text" class="form-control" />
+
+                <label for="typeUser">Rol</label>
+                <select id="typeUser" name="typeUser" class="form-control">
+                    <option value="100">Administrador</option>
+                    <option value="200">Normal</option>
+                </select>
+            </div>
+            <br />
+            <div class="col-6">
+                <button type="submit" class="btn btn-outline-primary col-12">Save</button>
+                <hr />
+            </div>
+        </form>
+    </div>
+</div>
