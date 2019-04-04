@@ -43,3 +43,22 @@ func CountHistory(user string) int {
 
 	return resultado
 }
+
+func GetPasswordHistory(user string) []string {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+	var resultado []string
+	var history []passwordHistory.PasswordHistory
+
+	db.Where("user = ?", user).Find(&history)
+
+	for _, step := range history {
+		password_decrypt, _ := utils.Decrypt(step.Password)
+		resultado = append(resultado, password_decrypt)
+	}
+
+	return resultado
+
+}

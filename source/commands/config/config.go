@@ -36,7 +36,7 @@ func saveConfiguration(configuration config.PassCompose) {
 	var dbConfiguration = config.PassCompose{}
 	db.First(&dbConfiguration).Related(&config.Word{})
 
-	dbConfiguration.Alphabet = configuration.Alphabet
+	dbConfiguration.Letters = configuration.Letters
 	dbConfiguration.AlphabetKeys = configuration.AlphabetKeys
 	dbConfiguration.BasicData = configuration.BasicData
 	dbConfiguration.CapitalLetter = configuration.CapitalLetter
@@ -104,7 +104,7 @@ func saveConfiguration(configuration config.PassCompose) {
 func changeHighConfiguration() {
 	var configuration = config.PassCompose{}
 
-	configuration.Alphabet = true
+	configuration.Letters = true
 	configuration.MaximumAlphabet = 1
 
 	configuration.AlphabetKeys = true
@@ -166,7 +166,7 @@ func changeHighConfiguration() {
 func changeMediumConfiguration() {
 	var configuration = config.PassCompose{}
 
-	configuration.Alphabet = true
+	configuration.Letters = true
 	configuration.MaximumAlphabet = 1
 
 	configuration.AlphabetKeys = true
@@ -228,7 +228,7 @@ func changeMediumConfiguration() {
 func changeLowConfiguration() {
 	var configuration = config.PassCompose{}
 
-	configuration.Alphabet = false
+	configuration.Letters = false
 	configuration.MaximumAlphabet = math.MaxInt32
 
 	configuration.AlphabetKeys = false
@@ -299,7 +299,7 @@ func GetCountPasswordHistory(user string) int {
 	return resultado
 }
 
-func GetUpdatePassword(usuario string) bool {
+func GetUpdatePassword() bool {
 	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
 	defer db.Close()
 
@@ -337,6 +337,146 @@ func GetCountFailedLogin() int {
 	db.First(&dbConfiguration).Related(&config.Word{})
 
 	resultado := dbConfiguration.MaximumFailedLogin
+
+	return resultado
+}
+
+func GetPolicyDigits() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := 0
+
+	if dbConfiguration.Digits {
+		resultado = dbConfiguration.MinimumDigits
+	}
+
+	return resultado
+}
+
+func GetPolicyLetters() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := 0
+
+	if dbConfiguration.Letters {
+		resultado = dbConfiguration.MinimumLetters
+	}
+
+	return resultado
+}
+
+func GetPolicyCapitalLetters() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := 0
+
+	if dbConfiguration.CapitalLetter {
+		resultado = dbConfiguration.MinimumCapitalLetters
+	}
+
+	return resultado
+}
+
+func GetPolicySpecialCharacter() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := 0
+
+	if dbConfiguration.SpecialCharacters {
+		resultado = dbConfiguration.MinimumSpecialCharacter
+	}
+
+	return resultado
+}
+
+func GetPolicyBasicData() bool {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := dbConfiguration.BasicData
+
+	return resultado
+}
+
+func GetPolicyLastPassword() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := 0
+
+	if dbConfiguration.LastPass {
+		resultado = dbConfiguration.NumberDiferentsLastPassword
+	}
+
+	return resultado
+}
+
+func GetPolicyDictionary() []config.Word {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	var resultado []config.Word
+
+	if dbConfiguration.Dictionary {
+		resultado = dbConfiguration.Words
+	}
+
+	return resultado
+}
+
+func GetPolicyLogin() int {
+	db, error := gorm.Open(utils.Connector, utils.NameDatabase)
+	defer db.Close()
+
+	utils.CheckPanic(error)
+
+	var dbConfiguration = config.PassCompose{}
+	db.First(&dbConfiguration).Related(&config.Word{})
+
+	resultado := 0
+
+	if dbConfiguration.Login {
+		resultado = dbConfiguration.MinimumDiferentsToLogin
+	}
 
 	return resultado
 }

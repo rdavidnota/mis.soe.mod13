@@ -15,6 +15,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"io"
 	"log"
+	"math"
 	rnd "math/rand"
 	"strings"
 	"time"
@@ -148,11 +149,36 @@ func CountCapitalLetter(texto string) int {
 	return resultado
 }
 
-func CountSymbols(texto string) int {
+func CountSpecialCharacter(texto string) int {
 	symbols := []string{"$", "#", "&", "@", ".", "-", "_", "*"}
 	resultado := 0
 	for _, symbol := range symbols {
 		resultado = strings.Count(texto, symbol)
+	}
+
+	return resultado
+}
+
+func CountDiferents(compare string, texto string) int {
+	resultado := 0
+
+	if strings.Contains(texto, compare) {
+		if len(texto) > len(compare) {
+			resultado = len(texto) - len(compare)
+		} else {
+			resultado = len(compare) - len(texto)
+		}
+	} else {
+		resultado = math.MaxInt32
+	}
+
+	return resultado
+}
+
+func Contains(compare []string, texto string) bool {
+	resultado := false
+	for _, symbol := range compare {
+		resultado = resultado || strings.Contains(texto, symbol)
 	}
 
 	return resultado

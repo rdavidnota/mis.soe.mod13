@@ -17,7 +17,7 @@ type PassCompose struct {
 	Digits        bool
 	MinimumDigits int
 
-	Alphabet       bool
+	Letters        bool
 	MinimumLetters int
 
 	CapitalLetter         bool

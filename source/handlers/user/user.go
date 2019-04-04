@@ -3,8 +3,10 @@ package user
 import (
 	"encoding/json"
 	"github.com/rdavidnota/mis.soe.mod13/source/commands/user"
+	userEntity "github.com/rdavidnota/mis.soe.mod13/source/domain/user"
 	"github.com/rdavidnota/mis.soe.mod13/source/handlers/auth"
 	"net/http"
+	"strconv"
 )
 
 func ListUsersHandler(w http.ResponseWriter, r *http.Request) {
@@ -57,13 +59,15 @@ func ChanguePasswordUserHandler(w http.ResponseWriter, r *http.Request) {
 		var usuario = r.URL.Query().Get("usuario")
 		var document = r.URL.Query().Get("document")
 
+		var codigos []int
 		if document == user.GetDocumentUser(usuario) {
-			user.ChangePassword(password, usuario, false)
+			_, codigos = user.ChangePassword(password, usuario, false, true)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(true)
+
+		json.NewEncoder(w).Encode(codigos)
 	}
 }
 
@@ -75,5 +79,29 @@ func VigentePasswordUserHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(resultado)
+	}
+}
+
+func SaveUserHandler(w http.ResponseWriter, r *http.Request) {
+	if auth.Authorizer(w, r) {
+
+		var usuario_admin = r.URL.Query().Get("usuario_admin")
+		var fullname = r.URL.Query().Get("fullname")
+		var email = r.URL.Query().Get("email")
+		var document = r.URL.Query().Get("document")
+		var usuario = r.URL.Query().Get("usuario")
+		var paramTypeUser = r.URL.Query().Get("typeUser")
+
+		typeUser, _ := strconv.Atoi(paramTypeUser)
+
+		if user.GetTypeUser(usuario_admin) == userEntity.Administrador {
+			user.SaveUser(fullname, email, document, usuario, typeUser)
+
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(true)
+		} else {
+			w.WriteHeader(http.StatusForbidden)
+		}
 	}
 }
